@@ -21,7 +21,7 @@ int handle_tp(void *ctx)
 ### 2. 将minimal.bpf.c编译成minimal.bpf.o
 ```
 完整：
-clang -g -O2 -target bpf -D__TARGET_ARCH_x86                               -I../../../libbpf/include/uapi -I../../vmlinux/x86/ -I../../../blazesym/include -idirafter /usr/lib64/clang/15.0.7/include -idirafter /usr/local/include -idirafter /usr/include -c minimal.bpf.c -o minimal.bpf.o
+clang -g -O2 -target bpf -D__TARGET_ARCH_x86                               -I../libbpf/include/uapi -I../vmlinux/x86/ -I../blazesym/include -idirafter /usr/lib64/clang/15.0.7/include -idirafter /usr/local/include -idirafter /usr/include -c minimal.bpf.c -o minimal.bpf.o
 
 精简：
 clang -g -O2 -target bpf -D__TARGET_ARCH_x86  -c minimal.bpf.c -o minimal.bpf.o
