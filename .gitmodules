@@ -1,9 +1,9 @@
 [submodule "libbpf"]
-	path = c/libbpf
+	path = libbpf
 	url = https://ghproxy.com/https://github.com/libbpf/libbpf.git
 [submodule "bpftool"]
-	path = c/bpftool
+	path = bpftool
 	url = https://ghproxy.com/https://github.com/libbpf/bpftool
 [submodule "blazesym"]
-	path = c/blazesym
+	path = blazesym
 	url = https://ghproxy.com/https://github.com/libbpf/blazesym.git
