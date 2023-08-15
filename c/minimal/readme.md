@@ -21,7 +21,7 @@ int handle_tp(void *ctx)
 ### 2. 将minimal.bpf.c编译成minimal.bpf.o
 ```
 完整：
-clang -g -O2 -target bpf -D__TARGET_ARCH_x86                               -I../libbpf/include/uapi -I../vmlinux/x86/ -I../blazesym/include -idirafter /usr/lib64/clang/15.0.7/include -idirafter /usr/local/include -idirafter /usr/include -c minimal.bpf.c -o minimal.bpf.o
+clang -g -O2 -target bpf -D__TARGET_ARCH_x86 -I../libbpf/include -I../vmlinux/x86/ -I../blazesym/include -idirafter /usr/lib64/clang/15.0.7/include -idirafter /usr/local/include -idirafter /usr/include -c minimal.bpf.c -o minimal.bpf.o
 
 精简：
 clang -g -O2 -target bpf -D__TARGET_ARCH_x86  -c minimal.bpf.c -o minimal.bpf.o
@@ -108,3 +108,15 @@ gcc -I/usr/src/kernels/$(uname -r)/include/uapi/ -I/usr/src/kernels/$(uname -r)/
 ```
 gcc minimal.o -lbpf -lelf -lz -o minimal
 ```
+
+## BPF怎么跟内核交互
+eBPF 程序并不能随意调用内核函数，因此，内核定义了一系列的辅助函数，用于 eBPF 程序与内核其他模块进行交互。比如bpf_trace_printk() 就是最常用的一个辅助函数，用于向调试文件系统（/sys/kernel/debug/tracing/trace_pipe）写入调试信息。
+
+从内核 5.13 版本开始，部分内核函数（如  tcp_slow_start()、tcp_reno_ssthresh()  等）也可以被 BPF 程序直接调用了，[链接](https://lwn.net/Articles/856005/)。不过，这些函数只能在 TCP 拥塞控制算法的 BPF 程序中调用，所以本课程不会过多展开。
+
+需要注意的是，并不是所有的辅助函数都可以在 eBPF 程序中随意使用，不同类型的 eBPF 程序所支持的辅助函数是不同的。比如，对于 Hello World 示例这类内核探针（kprobe）类型的 eBPF 程序，你可以在命令行中执行 `bpftool feature probe`来查询当前系统支持的辅助函数列表。
+
+对于这些辅助函数的详细定义，你可以在命令行中执行 man bpf-helpers ，或者参考内核头文件 include/uapi/linux/bpf.h ，来查看它们的详细定义和使用说明。为了方便你掌握，我把常用的辅助函数整理成了一个表格，你可以在需要时参考：
+![bpf-helper](docs/img/bpf-helper.webp)
+
+而在 eBPF 程序需要大块存储时，就不能像常规的内核代码那样去直接分配内存了，而是必须通过 BPF 映射（BPF Map）来完成。接下来，我带你看看 BPF 映射的具体原理。

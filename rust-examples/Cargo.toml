@@ -1,0 +1,17 @@
+[package]
+name = "rust-examples"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libbpf-rs = "0.21.2"
+
+[[bin]]
+name = "minimal"
+path = "src/minimal.rs"
+
+[[bin]]
+name = "minimal_legacy"
+path = "src/minimal_legacy.rs"
