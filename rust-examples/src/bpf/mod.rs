@@ -5,14 +5,19 @@
 #[path = "minimal.skel.rs"]
 mod minimal_skel;
 
-#[path = "minimal_legacy.skel.rs"]
-mod minimal_legacy_skel;
-
 #[path = "bootstrap.skel.rs"]
 mod bootstrap_skel;
 
+#[path = "minimal_legacy.skel.rs"]
+mod minimal_legacy_skel;
+
+#[path = "uprobe.skel.rs"]
+mod uprobe_skel;
+
 pub use minimal_skel::*;
+
+pub use bootstrap_skel::*;
 
 pub use minimal_legacy_skel::*;
 
-pub use bootstrap_skel::*;
+pub use uprobe_skel::*;

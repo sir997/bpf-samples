@@ -20,3 +20,7 @@ path = "src/minimal_legacy.rs"
 [[bin]]
 name = "bootstrap"
 path = "src/bootstrap.rs"
+
+[[bin]]
+name = "uprobe"
+path = "src/uprobe.rs"

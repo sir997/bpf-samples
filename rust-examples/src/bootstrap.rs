@@ -53,7 +53,7 @@ fn handle_event(data: &[u8]) -> i32 {
     if event.exit_event {
         let dur = std::time::Duration::from_nanos(event.duration_ns);
         println!(
-            "{:<8} {:<5} {:<16} {:<7} {:<7} [{}] {}",
+            "{:<8} {:<5} {:<16} {:<7} {:<7} [{}] {:?}",
             now, "EXIT", comm, event.pid, event.ppid, event.exit_code, dur
         );
     } else {
