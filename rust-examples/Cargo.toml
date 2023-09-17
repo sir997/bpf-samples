@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.28"
 libbpf-rs = "0.21.2"
+time = "0.3.28"
 
 [[bin]]
 name = "minimal"
@@ -20,7 +21,3 @@ path = "src/minimal_legacy.rs"
 [[bin]]
 name = "bootstrap"
 path = "src/bootstrap.rs"
-
-[[bin]]
-name = "uprobe"
-path = "src/uprobe.rs"
