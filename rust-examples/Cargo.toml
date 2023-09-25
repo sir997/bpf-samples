@@ -29,3 +29,7 @@ path = "src/kprobe.rs"
 [[bin]]
 name = "fentry"
 path = "src/fentry.rs"
+
+[[bin]]
+name = "xdp"
+path = "src/xdp.rs"

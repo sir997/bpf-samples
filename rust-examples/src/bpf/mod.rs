@@ -11,6 +11,9 @@ mod minimal_skel;
 #[path = "kprobe.skel.rs"]
 mod kprobe_skel;
 
+#[path = "xdp.skel.rs"]
+mod xdp_skel;
+
 #[path = "minimal_legacy.skel.rs"]
 mod minimal_legacy_skel;
 
@@ -22,6 +25,8 @@ pub use bootstrap_skel::*;
 pub use minimal_skel::*;
 
 pub use kprobe_skel::*;
+
+pub use xdp_skel::*;
 
 pub use minimal_legacy_skel::*;
 
