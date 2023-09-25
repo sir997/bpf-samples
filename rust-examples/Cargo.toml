@@ -21,3 +21,11 @@ path = "src/minimal_legacy.rs"
 [[bin]]
 name = "bootstrap"
 path = "src/bootstrap.rs"
+
+[[bin]]
+name = "kprobe"
+path = "src/kprobe.rs"
+
+[[bin]]
+name = "fentry"
+path = "src/fentry.rs"
