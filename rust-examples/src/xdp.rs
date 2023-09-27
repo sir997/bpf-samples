@@ -10,7 +10,7 @@ fn main() {
     let skel = builder.open().unwrap();
     let mut skel = skel.load().unwrap();
 
-    let link = skel.progs_mut().xdp_pass().attach_xdp(2).unwrap();
+    let link = skel.progs_mut().xdp_pass().attach_xdp(1).unwrap();
     skel.links = XdpLinks {
         xdp_pass: Some(link),
     };
