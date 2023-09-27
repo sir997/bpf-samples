@@ -7,12 +7,15 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.75"
+blazesym = "0.2.0-alpha.6"
 chrono = "0.4.28"
 clap = { version = "4.4.5", features = ["derive"] }
 libbpf-rs = "0.21.2"
 libc = "0.2.148"
 nix = { version = "0.27.1", features = ["net"] }
 time = "0.3.28"
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
 
 [[bin]]
 name = "minimal"
@@ -41,3 +44,7 @@ path = "src/xdp.rs"
 [[bin]]
 name = "tc"
 path = "src/tc.rs"
+
+[[bin]]
+name = "profile"
+path = "src/profile.rs"
