@@ -29,7 +29,7 @@ pub union bp_2_un {
 }
 
 #[repr(C)]
-pub struct perf_event_attr {
+pub struct PerfEventAttr {
     pub _type: u32,
     pub size: u32,
     pub config: u64,
@@ -61,7 +61,7 @@ extern "C" {
 }
 
 pub fn perf_event_open(
-    hw_event: &perf_event_attr,
+    hw_event: &PerfEventAttr,
     pid: libc::pid_t,
     cpu: libc::c_int,
     group_fd: libc::c_int,
@@ -70,7 +70,7 @@ pub fn perf_event_open(
     unsafe {
         syscall(
             libc::SYS_perf_event_open,
-            hw_event as *const perf_event_attr,
+            hw_event as *const PerfEventAttr,
             pid,
             cpu,
             group_fd,

@@ -26,9 +26,9 @@ use bpf::*;
 const MAX_STACK_DEPTH: usize = 128;
 const TASK_COMM_LEN: usize = 16;
 
-// A Rust version of stacktrace_event in profile.h
+// A Rust version of StacktraceEvent in profile.h
 #[repr(C)]
-struct stacktrace_event {
+struct StacktraceEvent {
     pid: u32,
     cpu_id: u32,
     comm: [u8; TASK_COMM_LEN],
@@ -39,16 +39,16 @@ struct stacktrace_event {
 }
 
 fn init_perf_monitor(freq: u64) -> Vec<i32> {
-    let nprocs = libbpf_rs::num_possible_cpus().unwrap();
-    let pid = -1;
-    let buf: Vec<u8> = vec![0; mem::size_of::<syscall::perf_event_attr>()];
+    let nprocs = num_cpus::get();
+    let pid: i32 = -1;
+    let buf: Vec<u8> = vec![0; mem::size_of::<syscall::PerfEventAttr>()];
     let mut attr = unsafe {
-        Box::<syscall::perf_event_attr>::from_raw(
-            buf.leak().as_mut_ptr() as *mut syscall::perf_event_attr
+        Box::<syscall::PerfEventAttr>::from_raw(
+            buf.leak().as_mut_ptr() as *mut syscall::PerfEventAttr
         )
     };
     attr._type = syscall::PERF_TYPE_HARDWARE;
-    attr.size = mem::size_of::<syscall::perf_event_attr>() as u32;
+    attr.size = mem::size_of::<syscall::PerfEventAttr>() as u32;
     attr.config = syscall::PERF_COUNT_HW_CPU_CYCLES;
     attr.sample.sample_freq = freq;
     attr.flags = 1 << 10; // freq = 1
@@ -138,16 +138,16 @@ fn show_stack_trace(stack: &[u64], symbolizer: &symbolize::Symbolizer, pid: u32)
 }
 
 fn event_handler(symbolizer: &symbolize::Symbolizer, data: &[u8]) -> ::std::os::raw::c_int {
-    if data.len() != mem::size_of::<stacktrace_event>() {
+    if data.len() != mem::size_of::<StacktraceEvent>() {
         eprintln!(
             "Invalid size {} != {}",
             data.len(),
-            mem::size_of::<stacktrace_event>()
+            mem::size_of::<StacktraceEvent>()
         );
         return 1;
     }
 
-    let event = unsafe { &*(data.as_ptr() as *const stacktrace_event) };
+    let event = unsafe { &*(data.as_ptr() as *const StacktraceEvent) };
 
     if event.kstack_size <= 0 && event.ustack_size <= 0 {
         return 1;
@@ -216,11 +216,11 @@ fn main() -> Result<(), Error> {
 
     let skel_builder = ProfileSkelBuilder::default();
     let open_skel = skel_builder.open().unwrap();
-    let mut skel = open_skel.load().unwrap();
+    let mut skel: ProfileSkel<'_> = open_skel.load().unwrap();
 
     let pefds = init_perf_monitor(freq);
     let _links = attach_perf_event(&pefds, skel.progs_mut().profile());
-
+ 
     let mut builder = libbpf_rs::RingBufferBuilder::new();
     let maps = skel.maps();
     builder
