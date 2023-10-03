@@ -49,3 +49,7 @@ path = "src/tc.rs"
 [[bin]]
 name = "profile"
 path = "src/profile.rs"
+
+[[bin]]
+name = "sockfilter"
+path = "src/sockfilter.rs"

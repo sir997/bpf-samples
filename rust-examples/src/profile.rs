@@ -50,11 +50,12 @@ fn init_perf_monitor(freq: u64) -> Vec<i32> {
     attr._type = syscall::PERF_TYPE_HARDWARE;
     attr.size = mem::size_of::<syscall::PerfEventAttr>() as u32;
     attr.config = syscall::PERF_COUNT_HW_CPU_CYCLES;
-    attr.sample.sample_freq = freq;
-    attr.flags = 1 << 10; // freq = 1
+    attr.sample.sample_freq = freq;// freq = 1
+    attr.flags = 1 << 10;
     (0..nprocs)
         .map(|cpu| {
-            let fd = syscall::perf_event_open(attr.as_ref(), pid, cpu as i32, -1, 0);
+            let fd = syscall::perf_event_open(attr.as_ref(), 
+            pid, cpu as i32, -1, 0);
             fd as i32
         })
         .collect()

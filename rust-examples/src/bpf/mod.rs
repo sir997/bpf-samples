@@ -20,6 +20,9 @@ mod minimal_legacy_skel;
 #[path = "fentry.skel.rs"]
 mod fentry_skel;
 
+#[path = "sockfilter.skel.rs"]
+mod sockfilter_skel;
+
 #[path = "profile.skel.rs"]
 mod profile_skel;
 
@@ -37,6 +40,8 @@ pub use xdp_skel::*;
 pub use minimal_legacy_skel::*;
 
 pub use fentry_skel::*;
+
+pub use sockfilter_skel::*;
 
 pub use profile_skel::*;
 
