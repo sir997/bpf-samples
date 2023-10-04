@@ -2,14 +2,14 @@ mod bpf;
 
 use std::{
     io,
-    net::{IpAddr, Ipv4Addr},
+    net::Ipv4Addr,
     os::fd::{AsFd, AsRawFd, RawFd},
     time::Duration,
 };
 
 use bpf::*;
 use libbpf_rs::{
-    libbpf_sys::{__be16, __be32},
+    libbpf_sys::__be32,
     skel::{OpenSkel, SkelBuilder},
     RingBufferBuilder,
 };
