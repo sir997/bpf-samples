@@ -36,15 +36,22 @@ fn handle_event(data: &[u8]) -> i32 {
 
     let event = unsafe { &*(data.as_ptr() as *const SoEvent) };
 
-    let src_addr = Ipv4Addr::from(event.src_addr.to_be());
-    let dst_addr = Ipv4Addr::from(event.dst_addr.to_be());
+    let src_addr = Ipv4Addr::from(u32::from_be(event.src_addr));
+    let dst_addr = Ipv4Addr::from(u32::from_be(event.dst_addr));
 
-    let src_port = event.ports >> 16;
-    let dst_port = event.ports & 0xF;
+    // 不确定这么写对不对
+    // 凭感觉低16位是src，高16位是dst
+    let src_port = u16::from_be((event.ports & 0xFF) as u16);
+    let dst_port = u16::from_be((event.ports >> 16) as u16);
 
     println!(
         "interface: {}\tprotocol: {}\t{}:{}(src) -> {}:{}(dst)\n",
-        "", event.ip_proto, src_addr, src_port, dst_addr, dst_port,
+        "",
+        ip_proto_mapping(event.ip_proto as i32),
+        src_addr,
+        src_port,
+        dst_addr,
+        dst_port,
     );
 
     0
@@ -64,6 +71,7 @@ fn open_raw_sock() -> io::Result<RawFd> {
 
         let mut sll: libc::sockaddr_ll = std::mem::zeroed();
         sll.sll_family = AF_PACKET as u16;
+        // cmd: ip a
         sll.sll_ifindex = 1;
         sll.sll_protocol = (ETH_P_ALL as u16).to_be();
 
@@ -117,4 +125,35 @@ fn main() -> anyhow::Result<()> {
     while rb.poll(Duration::from_millis(100)).is_ok() {}
 
     Ok(())
+}
+
+fn ip_proto_mapping(proto: i32) -> String {
+    match proto {
+        libc::IPPROTO_IP => String::from("IP"),
+        libc::IPPROTO_ICMP => String::from("ICMP"),
+        libc::IPPROTO_IGMP => String::from("IGMP"),
+        libc::IPPROTO_IPIP => String::from("IPIP"),
+        libc::IPPROTO_TCP => String::from("TCP"),
+        libc::IPPROTO_EGP => String::from("EGP"),
+        libc::IPPROTO_PUP => String::from("PUP"),
+        libc::IPPROTO_UDP => String::from("UDP"),
+        libc::IPPROTO_IDP => String::from("IDP"),
+        libc::IPPROTO_TP => String::from("TP"),
+        libc::IPPROTO_DCCP => String::from("DCCP"),
+        libc::IPPROTO_IPV6 => String::from("IPV6"),
+        libc::IPPROTO_RSVP => String::from("RSVP"),
+        libc::IPPROTO_GRE => String::from("GRE"),
+        libc::IPPROTO_ESP => String::from("ESP"),
+        libc::IPPROTO_AH => String::from("AH"),
+        libc::IPPROTO_MTP => String::from("MTP"),
+        libc::IPPROTO_BEETPH => String::from("BEETPH"),
+        libc::IPPROTO_ENCAP => String::from("ENCAP"),
+        libc::IPPROTO_PIM => String::from("PIM"),
+        libc::IPPROTO_COMP => String::from("COMP"),
+        libc::IPPROTO_SCTP => String::from("SCTP"),
+        libc::IPPROTO_UDPLITE => String::from("UDPLITE"),
+        libc::IPPROTO_MPLS => String::from("MPLS"),
+        libc::IPPROTO_RAW => String::from("RAW"),
+        _ => format!("NONE: {}", proto),
+    }
 }
