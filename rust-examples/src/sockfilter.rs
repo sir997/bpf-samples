@@ -1,7 +1,7 @@
 mod bpf;
 
 use std::{
-    io,
+    io::{self},
     net::Ipv4Addr,
     os::fd::{AsFd, AsRawFd, RawFd},
     time::Duration,
@@ -44,9 +44,16 @@ fn handle_event(data: &[u8]) -> i32 {
     let src_port = u16::from_be((event.ports & 0xFF) as u16);
     let dst_port = u16::from_be((event.ports >> 16) as u16);
 
+    let vec: Vec<u8>;
+    unsafe {
+        let mut ifarr: [libc::c_char; 16] = [0; 16];
+        libc::if_indextoname(1, &mut ifarr[0]);
+        vec = ifarr.iter().filter(|&&x| x > 0).map(|&x| x as u8).collect();
+    }
+
     println!(
         "interface: {}\tprotocol: {}\t{}:{}(src) -> {}:{}(dst)\n",
-        "",
+        String::from_utf8(vec).unwrap(),
         ip_proto_mapping(event.ip_proto as i32),
         src_addr,
         src_port,
